@@ -34,6 +34,7 @@ class Item:
         return f'{self.__name}'
 
     def __add__(self, other):
+        """Складывает экземпляры классов."""
         if isinstance(other, self.__class__):
             # if issubclass(other.__class__, self.__class__):
             return self.quantity + other.quantity
