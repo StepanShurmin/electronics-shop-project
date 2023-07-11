@@ -33,6 +33,13 @@ class Item:
         """Возвращает строковое представление экземпляра класса."""
         return f'{self.__name}'
 
+    def __add__(self, other):
+        if isinstance(other, self.__class__):
+            # if issubclass(other.__class__, self.__class__):
+            return self.quantity + other.quantity
+        else:
+            raise TypeError('Нельзя сложить `Phone` или `Item` с экземплярами не `Phone` или `Item` классов')
+
     @property
     def name(self) -> str:
         """
