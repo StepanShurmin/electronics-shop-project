@@ -22,10 +22,10 @@ class MixinLanguage:
 
     def change_lang(self):
         """Изменяет язык (раскладки клавиатуры)."""
-        if self.__language == 'EN':
-            self.__language = 'RU'
+        if self.language == 'EN':
+            self.language = 'RU'
         else:
-            self.__language = 'EN'
+            self.language = 'EN'
         return self
 
 
