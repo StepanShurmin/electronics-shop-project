@@ -5,6 +5,16 @@ ROOT_PATH = Path(__file__).resolve().parent
 PATH = Path.joinpath(ROOT_PATH, '../src/items.csv')
 
 
+
+class InstantiateCSVError(Exception):
+    """Класс-исключение, возвращает сообщение об ошибке."""
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self) -> str:
+        return self.message
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -63,18 +73,25 @@ class Item:
             self.__name = name
 
     @classmethod
-    def instantiate_from_csv(cls):
+    def instantiate_from_csv(cls) -> None:
         """
         Инициализирует экземпляры класса Item данными из файла items.csv.
         """
         cls.all = []
-        with open(PATH, 'r', encoding='windows-1251') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                name = row['name']
-                price = cls.string_to_number(row['price'])
-                quantity = cls.string_to_number(row['quantity'])
-                cls(name, price, quantity)
+        try:
+            with open(PATH, 'r', encoding='windows-1251') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if not all(key in row for key in ['name', 'price', 'quantity']):
+                        raise InstantiateCSVError('Файл item.csv поврежден')
+                    name = row['name']
+                    price = cls.string_to_number(row['price'])
+                    quantity = cls.string_to_number(row['quantity'])
+                    cls(name, price, quantity)
+        except FileNotFoundError:
+            raise FileNotFoundError('Отсутствует файл item.csv')
+        except InstantiateCSVError as err:
+            raise InstantiateCSVError(err.message)
 
     @staticmethod
     def string_to_number(value: str) -> int:
